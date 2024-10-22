@@ -1,2 +1,2 @@
 # simplebankapp
-Simple CLI based banking app in C. 
+Simple banking app in C. 
