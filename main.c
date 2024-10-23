@@ -8,9 +8,14 @@ int userCount = false;
 int passwordCount = false;
 int userBalanceIter = 1;
 
-void removeFundsSender() {
-  printf("\n\nRemoving funds...");
-  exit(1);
+void removeFundsSender(char *userSend) {
+  char confirmTransaction;
+  printf("Are you sure you want to send $100 to %s? ", userSend);
+  scanf("%c", &confirmTransaction);
+
+  //printf("\nWE need to iterate to this number in balance.txt: %d", userCount); 
+  //printf("\n\nRemoving funds...");
+  //exit(1);
 }
 
 
@@ -19,16 +24,14 @@ void checkUser(char *userSend) {
   char approveTrans;
   FILE* validateTransferee;
   validateTransferee = fopen("users.txt", "r");
-  char valUsers[10];
-  while (fgets(valUsers, 10, validateTransferee)) {
+  char valUsers[21];
+  while (fgets(valUsers, 21, validateTransferee)) {
     valUsers[strcspn(valUsers, "\n")] = 0;
     int validateTransfereeUsername = strcmp(valUsers, userSend);
     if (validateTransfereeUsername == 0) {
       printf("\nAmount: ");
       scanf("%d", &sendAmount);
-      printf("Are you sure you want to approve of this transaction? (y/n) ");
-      scanf("%c", &approveTrans);
-      removeFundsSender();
+      removeFundsSender(userSend);
     }
   } 
   printf("\nTRANSACTION FAILED. User does not exist. ");
@@ -37,7 +40,7 @@ void checkUser(char *userSend) {
 
 void sendLogout() {
   int userOption;
-  char userSend[10];  
+  char userSend[30];  
   printf("\n\n1) Send");
   printf("\n2) Logout\n\n");
   scanf("%d", &userOption);
@@ -78,9 +81,9 @@ void checkLoginDetails(char *usernameInput, char *passwordInput) {
   FILE* checkPass;
   checkUser = fopen("users.txt", "r");
   checkPass = fopen("passwords.txt", "r");
-  char users[10];
-  char passwords[10];
-  while (fgets(users, 10, checkUser)) {
+  char users[30];
+  char passwords[30];
+  while (fgets(users, 30, checkUser)) {
     userCount++;
     users[strcspn(users, "\n")] = 0;
     int compareUsers = strcmp(users, usernameInput);
@@ -88,7 +91,7 @@ void checkLoginDetails(char *usernameInput, char *passwordInput) {
       break;
     }
   }
-  while (fgets(passwords, 10, checkPass)) {
+  while (fgets(passwords, 30, checkPass)) {
     passwordCount++;
     passwords[strcspn(passwords, "\n")] = 0; 
     if (passwordCount == userCount) {
@@ -201,4 +204,13 @@ void loginRegister() {
 int main() {
   loginRegister();
 }
+
+
+// To-do list. 
+
+/*
+
+
+
+*/
 
