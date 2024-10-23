@@ -137,8 +137,6 @@ void accountRegister() {
   scanf("%s", &username);
   printf("Create password: ");
   scanf("%s", &password);
-  // DEBUGGING print statement! (Add dynamic memory alloc.)
-  printf("\nSize of username: %lu", strlen(username));
   checkAvailability(username); 
   if (unavailable == 0) {
     printf("\nUsername is unavailable. Please try again, using something else. ");
@@ -156,7 +154,10 @@ void accountRegister() {
     printf("\nPassword cannot be less than 8 digits. Please try again.");
     exit(1);
   }
-  else if (strlen(password) > 20)
+  else if (strlen(password) > 20) {
+    printf("\nPassword cannot be greater than 20 digits. Please try again.");
+    exit(1);
+  }
   writeU = fopen("users.txt", "a");
   writeP = fopen("passwords.txt", "a");  
   writeB = fopen("balance.txt", "a");                                    
@@ -200,14 +201,4 @@ void loginRegister() {
 int main() {
   loginRegister();
 }
-
-
-// To-do list. 
-
-/*
-
-1. make it subtract from their balance and add it to the transferee.   
-
-*/
-
 
