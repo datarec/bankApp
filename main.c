@@ -1,3 +1,5 @@
+// Simple banking app. (CLI)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,14 +10,11 @@ int userCount = false;
 int passwordCount = false;
 int userBalanceIter = 1;
 
-void removeFundsSender(char *userSend) {
+void removeFundsSender(char *userSend, int sendAmount) {
   char confirmTransaction;
-  printf("Are you sure you want to send $100 to %s? ", userSend);
-  scanf("%c", &confirmTransaction);
-
-  //printf("\nWE need to iterate to this number in balance.txt: %d", userCount); 
-  //printf("\n\nRemoving funds...");
-  //exit(1);
+  printf("\nAre you sure you want to send $%d to %s (y/n)? ", sendAmount, userSend);
+  scanf(" %c", &confirmTransaction);
+  
 }
 
 
@@ -31,7 +30,7 @@ void checkUser(char *userSend) {
     if (validateTransfereeUsername == 0) {
       printf("\nAmount: ");
       scanf("%d", &sendAmount);
-      removeFundsSender(userSend);
+      removeFundsSender(userSend, sendAmount);
     }
   } 
   printf("\nTRANSACTION FAILED. User does not exist. ");
@@ -204,13 +203,4 @@ void loginRegister() {
 int main() {
   loginRegister();
 }
-
-
-// To-do list. 
-
-/*
-
-
-
-*/
 
