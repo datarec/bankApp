@@ -1,5 +1,3 @@
-// Simple banking app. (CLI)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,12 +7,30 @@ int unavailable = true;
 int userCount = false;
 int passwordCount = false;
 int userBalanceIter = 1;
+int removeBalanceIter = 1;
 
 void removeFundsSender(char *userSend, int sendAmount) {
   char confirmTransaction;
+  printf("\nUser balance: %d", userBalanceIter);
   printf("\nAre you sure you want to send $%d to %s (y/n)? ", sendAmount, userSend);
   scanf(" %c", &confirmTransaction);
-  
+  if (confirmTransaction == 'y') {
+    // read and write to balance. use sendAmount 
+    FILE* removeBalance; 
+    removeBalance = fopen("balance.txt", "r+");
+    char retrieveFunds2[30];
+    printf("Getting balance! ");
+    while (fgets(retrieveFunds2, 30, removeBalance)) {
+      if (removeBalanceIter == userBalanceIter) {
+        printf("\nFound user balance: %s", retrieveFunds2);
+        exit(1);
+      }
+      removeBalanceIter++; 
+    } 
+  } 
+  else if (confirmTransaction == 'n') {
+    exit(1);
+  }
 }
 
 
@@ -203,4 +219,14 @@ void loginRegister() {
 int main() {
   loginRegister();
 }
+
+
+// To-do list. 
+
+/*
+
+work on iterating through, subtracting and writing that expression to the users balance. 
+in text file. (dont worry about debugging.)
+
+*/
 
