@@ -9,24 +9,30 @@ int passwordCount = false;
 int userBalanceIter = 1;
 int removeBalanceIter = 1;
 
-void removeFundsSender(char *userSend, int sendAmount) {
+void removeFundsSender(char *userSend, int sendAmount, char *usernameInput) {
   char confirmTransaction;
-  printf("\nUser balance: %d", userBalanceIter);
+  //printf("\nUser balance: %d", userBalanceIter);
   printf("\nAre you sure you want to send $%d to %s (y/n)? ", sendAmount, userSend);
   scanf(" %c", &confirmTransaction);
   if (confirmTransaction == 'y') {
-    // read and write to balance. use sendAmount 
-    FILE* removeBalance; 
-    removeBalance = fopen("balance.txt", "r+");
-    char retrieveFunds2[30];
-    printf("Getting balance! ");
-    while (fgets(retrieveFunds2, 30, removeBalance)) {
-      if (removeBalanceIter == userBalanceIter) {
-        printf("\nFound user balance: %s", retrieveFunds2);
+    //printf("Yay we have our logged in user; %s", usernameInput);
+    FILE* checkAdequate;
+    checkAdequate = fopen(usernameInput, "r");
+    char checkRetrieve[30];
+    while (fgets(checkRetrieve, 30, checkAdequate)) {
+      int crInt = atoi(checkRetrieve);
+      if (crInt < sendAmount) {
+        printf("You have insufficient funds.");
         exit(1);
       }
-      removeBalanceIter++; 
-    } 
+      else {
+        FILE* writeChanges;
+        writeChanges = fopen(usernameInput, "w");
+        int comparison1 = crInt - sendAmount;
+        fprintf(writeChanges, "3");
+        exit(1);
+      }
+    }
   } 
   else if (confirmTransaction == 'n') {
     exit(1);
@@ -34,11 +40,11 @@ void removeFundsSender(char *userSend, int sendAmount) {
 }
 
 
-void checkUser(char *userSend) {
+void checkUser(char *userSend, char *usernameInput) {
   int sendAmount;
   char approveTrans;
   FILE* validateTransferee;
-  validateTransferee = fopen("users.txt", "r");
+  validateTransferee = fopen("usernames.txt", "r");
   char valUsers[21];
   while (fgets(valUsers, 21, validateTransferee)) {
     valUsers[strcspn(valUsers, "\n")] = 0;
@@ -46,14 +52,14 @@ void checkUser(char *userSend) {
     if (validateTransfereeUsername == 0) {
       printf("\nAmount: ");
       scanf("%d", &sendAmount);
-      removeFundsSender(userSend, sendAmount);
+      removeFundsSender(userSend, sendAmount, usernameInput);
     }
   } 
   printf("\nTRANSACTION FAILED. User does not exist. ");
 }
 
 
-void sendLogout() {
+void sendLogout(char *usernameInput) {
   int userOption;
   char userSend[30];  
   printf("\n\n1) Send");
@@ -62,7 +68,7 @@ void sendLogout() {
   if (userOption == 1) {
     printf("\nTransferee: ");
     scanf("%s", userSend);
-    checkUser(userSend);
+    checkUser(userSend, usernameInput);
   }
   else if (userOption == 2) {
     printf("\nGoodbye. ");
@@ -75,7 +81,7 @@ void loginPage(char *usernameInput) {
   printf("\n\nWelcome %s!", usernameInput);
   int availableFunds = 0;
   char retrieveFunds[10];
-  userBalance = fopen("balance.txt", "r");
+  userBalance = fopen(usernameInput, "r");
   while (fgets(retrieveFunds, 10, userBalance)) {
     retrieveFunds[strcspn(retrieveFunds, "\n")] = 0;
     if (userBalanceIter != userCount) {
@@ -84,17 +90,18 @@ void loginPage(char *usernameInput) {
     else if (userBalanceIter == userCount) {
       int fundsInt = atoi(retrieveFunds);
       printf("\n\nBalance: %d ", fundsInt);
-      sendLogout();
+      sendLogout(usernameInput);
       break;
     }
   }
+  fclose(userBalance);
 }    
 
 
 void checkLoginDetails(char *usernameInput, char *passwordInput) {
   FILE* checkUser;
   FILE* checkPass;
-  checkUser = fopen("users.txt", "r");
+  checkUser = fopen("usernames.txt", "r");
   checkPass = fopen("passwords.txt", "r");
   char users[30];
   char passwords[30];
@@ -129,7 +136,7 @@ void checkLoginDetails(char *usernameInput, char *passwordInput) {
 void checkAvailability(char *username) {
   FILE* usernames;
   int i;
-  usernames = fopen("users.txt", "r");
+  usernames = fopen("usernames.txt", "r");
   char iterUsers[10];
   while (fgets(iterUsers, 10, usernames)) {
     iterUsers[strcspn(iterUsers, "\n")] = 0;
@@ -176,9 +183,9 @@ void accountRegister() {
     printf("\nPassword cannot be greater than 20 digits. Please try again.");
     exit(1);
   }
-  writeU = fopen("users.txt", "a");
+  writeU = fopen("usernames.txt", "a");
   writeP = fopen("passwords.txt", "a");  
-  writeB = fopen("balance.txt", "a");                                    
+  writeB = fopen(username, "a");                                    
   fprintf(writeU, "%s\n", username); 
   fprintf(writeP, "%s\n", password);
   fprintf(writeB, "%d\n", 100);
