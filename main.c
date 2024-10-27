@@ -3,19 +3,38 @@
 #include <string.h>
 #include <stdbool.h>
 
-int unavailable = true;
-int userCount = false;
-int passwordCount = false;
+int unavailable = 1;
+int userCount = 0;
+int passwordCount = 0;
 int userBalanceIter = 1;
 int removeBalanceIter = 1;
 
+void updateTransfereeFunds(int sendAmount, char *userSend) {
+  FILE* readTransferee;
+  readTransferee = fopen(userSend, "r");
+  char retrieveTransferee[10];
+  while (fgets(retrieveTransferee, 10, readTransferee)) {
+    FILE* writeTransferee;
+    int rtfInt = atoi(retrieveTransferee);
+    int adding = rtfInt + sendAmount;
+    char addingStr[10];
+    sprintf(addingStr, "%d", adding);
+    writeTransferee = fopen(userSend, "w");
+    fprintf(writeTransferee, addingStr);
+    printf("\nsending money...");
+    printf("\nTRANSACTION SUCCESSFUL!");
+    fclose(writeTransferee);
+    fclose(readTransferee);
+    exit(1);
+  }
+}
+
+
 void removeFundsSender(char *userSend, int sendAmount, char *usernameInput) {
   char confirmTransaction;
-  //printf("\nUser balance: %d", userBalanceIter);
   printf("\nAre you sure you want to send $%d to %s (y/n)? ", sendAmount, userSend);
   scanf(" %c", &confirmTransaction);
   if (confirmTransaction == 'y') {
-    //printf("Yay we have our logged in user; %s", usernameInput);
     FILE* checkAdequate;
     checkAdequate = fopen(usernameInput, "r");
     char checkRetrieve[30];
@@ -25,12 +44,16 @@ void removeFundsSender(char *userSend, int sendAmount, char *usernameInput) {
         printf("You have insufficient funds.");
         exit(1);
       }
-      else {
+      else { 
         FILE* writeChanges;
         writeChanges = fopen(usernameInput, "w");
-        int comparison1 = crInt - sendAmount;
-        fprintf(writeChanges, "3");
-        exit(1);
+        int comparison = crInt - sendAmount;
+        char comparisonStr[5];
+        sprintf(comparisonStr, "%d", comparison);
+        fprintf(writeChanges, comparisonStr);
+        fclose(writeChanges);
+        fclose(checkAdequate);
+        updateTransfereeFunds(sendAmount, userSend);
       }
     }
   } 
@@ -52,6 +75,7 @@ void checkUser(char *userSend, char *usernameInput) {
     if (validateTransfereeUsername == 0) {
       printf("\nAmount: ");
       scanf("%d", &sendAmount);
+      fclose(validateTransferee);
       removeFundsSender(userSend, sendAmount, usernameInput);
     }
   } 
@@ -83,16 +107,8 @@ void loginPage(char *usernameInput) {
   char retrieveFunds[10];
   userBalance = fopen(usernameInput, "r");
   while (fgets(retrieveFunds, 10, userBalance)) {
-    retrieveFunds[strcspn(retrieveFunds, "\n")] = 0;
-    if (userBalanceIter != userCount) {
-      userBalanceIter++;
-    }
-    else if (userBalanceIter == userCount) {
-      int fundsInt = atoi(retrieveFunds);
-      printf("\n\nBalance: %d ", fundsInt);
-      sendLogout(usernameInput);
-      break;
-    }
+    printf("\n\nBalance: %s", retrieveFunds);
+    sendLogout(usernameInput);
   }
   fclose(userBalance);
 }    
@@ -119,7 +135,8 @@ void checkLoginDetails(char *usernameInput, char *passwordInput) {
     if (passwordCount == userCount) {
       int comparePassword = strcmp(passwordInput, passwords);
       if (comparePassword == 0) {
-        printf("\nAccess granted!");
+        printf("\nAccess granted!"); 
+        printf("\nUser iter: %d, Password iter: %d", userCount, passwordCount);
         loginPage(usernameInput);
       }
       else {
@@ -232,8 +249,7 @@ int main() {
 
 /*
 
-work on iterating through, subtracting and writing that expression to the users balance. 
-in text file. (dont worry about debugging.)
+nothing, all done (:
 
 */
 
