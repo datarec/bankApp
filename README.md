@@ -1,2 +1,2 @@
-# simplebankapp
-Simple banking app in C. 
+# bankApp
+banking app in C. 
