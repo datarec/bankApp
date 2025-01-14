@@ -243,13 +243,3 @@ void loginRegister() {
 int main() {
   loginRegister();
 }
-
-
-// To-do list. 
-
-/*
-
-nothing, all done (:
-
-*/
-
